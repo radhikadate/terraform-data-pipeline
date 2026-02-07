@@ -1,0 +1,12 @@
+region      = "ap-southeast-2"
+account_id  = "054158074701"
+environment = "dev"
+
+# VPC Configuration
+vpc_cidr_block        = "10.20.0.0/16"
+public_subnet_1_cidr  = "10.20.0.0/20"
+public_subnet_2_cidr  = "10.20.16.0/20"
+private_subnet_1_cidr = "10.20.128.0/20"
+private_subnet_2_cidr = "10.20.144.0/20"
+availability_zone_1   = "ap-southeast-2a"
+availability_zone_2   = "ap-southeast-2b"
