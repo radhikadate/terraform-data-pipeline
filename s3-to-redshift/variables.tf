@@ -9,34 +9,8 @@ variable "account_id" {
   type        = string
 }
 
-variable "redshift_workgroup_name" {
-  description = "Name of the Redshift workgroup"
-  type        = string
-}
-
-variable "redshift_database_name" {
-  description = "Name of the Redshift database"
+variable "environment" {
+  description = "Environment (dev, test, prod)"
   type        = string
   default     = "dev"
-}
-
-variable "redshift_secret_arn" {
-  description = "ARN of the Redshift credentials secret"
-  type        = string
-}
-
-variable "redshift_role_arn" {
-  description = "ARN of the Redshift IAM role"
-  type        = string
-}
-
-variable "manifest_bucket_name" {
-  description = "Name of the S3 manifest bucket"
-  type        = string
-}
-
-variable "redshift_namespace_name" {
-  description = "Name of the Redshift namespace"
-  type        = string
-  default     = "pp-dev-namespace"
 }
