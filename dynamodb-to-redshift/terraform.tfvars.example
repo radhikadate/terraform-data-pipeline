@@ -1,0 +1,9 @@
+region      = "ap-southeast-2"
+environment = "dev"
+
+# From static-setup outputs
+glue_assets_bucket_name = "pp-glue-assets-054158074701-ap-southeast-2"
+dynamodb_table_name     = "pp-orders"
+redshift_workgroup_name = "pp-dev-workgroup"
+redshift_database_name  = "dev"
+redshift_secret_arn     = "arn:aws:secretsmanager:ap-southeast-2:054158074701:secret:pp-dev-redshift-credentials-xo7fte"
