@@ -1,0 +1,9 @@
+region      = "ap-southeast-2"
+account_id  = "054158074701"
+
+# From static-setup outputs
+redshift_workgroup_name = "pp-dev-workgroup"
+redshift_database_name  = "dev"
+redshift_secret_arn     = "arn:aws:secretsmanager:ap-southeast-2:054158074701:secret:pp-dev-redshift-credentials-xo7fte"
+redshift_role_arn       = "arn:aws:iam::054158074701:role/pp-dev-redshift-role"
+manifest_bucket_name    = "pp-manifest-054158074701-ap-southeast-2"

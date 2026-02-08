@@ -1,0 +1,6 @@
+{
+    "resourcePolicy": {
+        "policy": "{\n  \"Version\" : \"2012-10-17\",\n  \"Statement\" : [ {\n    \"Effect\" : \"Allow\",\n    \"Principal\" : {\n      \"Service\" : \"redshift.amazonaws.com\"\n    },\n    \"Action\" : \"redshift-serverless:AuthorizeInboundIntegration\",\n    \"Resource\" : \"arn:aws:redshift-serverless:ap-southeast-2:054158074701:namespace/03828904-9a46-4119-bbeb-309894208c16\",\n    \"Condition\" : {\n      \"StringEquals\" : {\n        \"aws:SourceArn\" : \"arn:aws:s3:::pp-manifest-054158074701-ap-southeast-2\"\n      }\n    }\n  }, {\n    \"Effect\" : \"Allow\",\n    \"Principal\" : {\n      \"AWS\" : \"arn:aws:iam::054158074701:root\"\n    },\n    \"Action\" : \"redshift-serverless:CreateInboundIntegration\",\n    \"Resource\" : \"arn:aws:redshift-serverless:ap-southeast-2:054158074701:namespace/03828904-9a46-4119-bbeb-309894208c16\"\n  } ]\n}",
+        "resourceArn": "arn:aws:redshift-serverless:ap-southeast-2:054158074701:namespace/03828904-9a46-4119-bbeb-309894208c16"
+    }
+}
