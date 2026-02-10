@@ -1,0 +1,137 @@
+name: Destroy Data Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "destroy" to confirm'
+        required: true
+        default: ''
+
+env:
+  AWS_REGION: ap-southeast-2
+  TF_VERSION: 1.5.0
+
+jobs:
+  validate-input:
+    name: Validate Destroy Confirmation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check confirmation
+        run: |
+          if [ "${{ github.event.inputs.confirm }}" != "destroy" ]; then
+            echo "Confirmation failed. You must type 'destroy' to proceed."
+            exit 1
+          fi
+
+  redshift-s3-unload:
+    name: Destroy Redshift to S3 Unload
+    runs-on: ubuntu-latest
+    needs: validate-input
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Terraform Init
+        working-directory: ./redshift-s3-unload
+        run: terraform init
+
+      - name: Terraform Destroy
+        working-directory: ./redshift-s3-unload
+        run: terraform destroy -auto-approve
+
+  s3-to-redshift:
+    name: Destroy S3 to Redshift Pipeline
+    runs-on: ubuntu-latest
+    needs: redshift-s3-unload
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Terraform Init
+        working-directory: ./s3-to-redshift
+        run: terraform init
+
+      - name: Terraform Destroy
+        working-directory: ./s3-to-redshift
+        run: terraform destroy -auto-approve
+
+  dynamodb-to-redshift:
+    name: Destroy DynamoDB to Redshift Pipeline
+    runs-on: ubuntu-latest
+    needs: redshift-s3-unload
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Terraform Init
+        working-directory: ./dynamodb-to-redshift
+        run: terraform init
+
+      - name: Terraform Destroy
+        working-directory: ./dynamodb-to-redshift
+        run: terraform destroy -auto-approve
+
+  static-setup:
+    name: Destroy Static Infrastructure
+    runs-on: ubuntu-latest
+    needs: [s3-to-redshift, dynamodb-to-redshift]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Terraform Init
+        working-directory: ./static-setup
+        run: terraform init
+
+      - name: Terraform Destroy
+        working-directory: ./static-setup
+        run: terraform destroy -auto-approve
